@@ -2,11 +2,13 @@
 
 #include <trippin/common.h>
 
-#include <GL/gl.h>
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#define GLAD_GL_IMPLEMENTATION
+#include <glad/gl.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl2.h>
+#include <imgui_impl_opengl3.h>
 
 #include "state.h"
 
@@ -30,6 +32,7 @@ void gsm::init_window()
 	}
 
 	glfwMakeContextCurrent(_gsm.window);
+	gladLoadGL(glfwGetProcAddress);
 	glfwSwapInterval(1);
 
 	glfwSetFramebufferSizeCallback(_gsm.window, [](GLFWwindow* win, int w, int h) {
@@ -40,6 +43,8 @@ void gsm::init_window()
 	glfwGetWindowSize(_gsm.window, &w, &h);
 	glViewport(0, 0, w, h);
 
+	tr::log("initialized window and stuff");
+
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
@@ -48,22 +53,23 @@ void gsm::init_window()
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 	ImGui_ImplGlfw_InitForOpenGL(_gsm.window, true);
-	ImGui_ImplOpenGL2_Init();
+	ImGui_ImplOpenGL3_Init();
 }
 
 void gsm::free_window()
 {
-	ImGui_ImplOpenGL2_Shutdown();
+	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 	glfwDestroyWindow(_gsm.window);
 	glfwTerminate();
+	tr::log("deinitialized window and stuff");
 }
 
 void gsm::start_main_loop()
 {
 	glfwPollEvents();
-	ImGui_ImplOpenGL2_NewFrame();
+	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 }
@@ -71,6 +77,6 @@ void gsm::start_main_loop()
 void gsm::end_main_loop()
 {
 	ImGui::Render();
-	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	glfwSwapBuffers(gsm::_gsm.window);
 }
