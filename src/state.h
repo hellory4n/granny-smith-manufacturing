@@ -8,4 +8,4 @@ extern struct GrannySmithManufacturing
 	GLFWwindow* window;
 } _gsm;
 
-} // namespace
+} // namespace gsm
