@@ -18,9 +18,16 @@ build thirdparty/libtrippin/trippin/math.o: compile thirdparty/libtrippin/trippi
 build thirdparty/libtrippin/trippin/memory.o: compile thirdparty/libtrippin/trippin/memory.cpp
 build thirdparty/libtrippin/trippin/string.o: compile thirdparty/libtrippin/trippin/string.cpp
 build thirdparty/libtrippin/trippin/util.o: compile thirdparty/libtrippin/trippin/util.cpp
+build thirdparty/imgui/imgui.o: compile thirdparty/imgui/imgui.cpp
+build thirdparty/imgui/imgui_demo.o: compile thirdparty/imgui/imgui_demo.cpp
+build thirdparty/imgui/imgui_draw.o: compile thirdparty/imgui/imgui_draw.cpp
+build thirdparty/imgui/imgui_tables.o: compile thirdparty/imgui/imgui_tables.cpp
+build thirdparty/imgui/imgui_widgets.o: compile thirdparty/imgui/imgui_widgets.cpp
+build thirdparty/imgui/backends/imgui_impl_glfw.o: compile thirdparty/imgui/backends/imgui_impl_glfw.cpp
+build thirdparty/imgui/backends/imgui_impl_opengl2.o: compile thirdparty/imgui/backends/imgui_impl_opengl2.cpp
 build src/main.o: compile src/main.cpp
 build src/window.o: compile src/window.cpp
 build src/state.o: compile src/state.cpp
-build gsmith: link src/main.o src/window.o src/state.o thirdparty/libtrippin/trippin/common.o thirdparty/libtrippin/trippin/error.o thirdparty/libtrippin/trippin/iofs.o thirdparty/libtrippin/trippin/log.o thirdparty/libtrippin/trippin/math.o thirdparty/libtrippin/trippin/memory.o thirdparty/libtrippin/trippin/string.o thirdparty/libtrippin/trippin/util.o
+build gsmith: link src/main.o src/window.o src/state.o thirdparty/libtrippin/trippin/common.o thirdparty/libtrippin/trippin/error.o thirdparty/libtrippin/trippin/iofs.o thirdparty/libtrippin/trippin/log.o thirdparty/libtrippin/trippin/math.o thirdparty/libtrippin/trippin/memory.o thirdparty/libtrippin/trippin/string.o thirdparty/libtrippin/trippin/util.o thirdparty/imgui/imgui.o thirdparty/imgui/imgui_demo.o thirdparty/imgui/imgui_draw.o thirdparty/imgui/imgui_tables.o thirdparty/imgui/imgui_widgets.o thirdparty/imgui/backends/imgui_impl_glfw.o thirdparty/imgui/backends/imgui_impl_opengl2.o
 
 default gsmith
