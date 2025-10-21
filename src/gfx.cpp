@@ -3,7 +3,6 @@
 #include <trippin/iofs.h>
 
 #include <glad/gl.h>
-#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 #include "state.h"
@@ -12,7 +11,7 @@ void gsm::clear_screen(tr::Color color)
 {
 	tr::Vec4<float32> vec4_color = color;
 	glClearColor(vec4_color.x, vec4_color.y, vec4_color.z, vec4_color.w);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 gsm::Mesh::Mesh(

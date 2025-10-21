@@ -1,9 +1,15 @@
 cxx = x86_64-w64-mingw32-g++
-cflags = -std=c++20 -Wall -Wextra -Wpedantic -Isrc -Ithirdparty -Ithirdparty/libtrippin -Ithirdparty/imgui -Ithirdparty/imgui/backends -Iwindows/include -Og -g -DDEBUG -D_DEBUG -fno-omit-frame-pointer
+cc = clang
+cxxflags = -std=c++20 -Wall -Wextra -Wpedantic -Isrc -Ithirdparty -Ithirdparty/libtrippin -Ithirdparty/imgui -Ithirdparty/imgui/backends -Iwindows/include -Og -g -DDEBUG -D_DEBUG -fno-omit-frame-pointer
+cflags = -std=c11 -Wall -Wextra -Wpedantic -Isrc -Ithirdparty -Ithirdparty/libtrippin -Ithirdparty/imgui -Ithirdparty/imgui/backends -Iwindows/include -Og -g -DDEBUG -D_DEBUG -fno-omit-frame-pointer
 ldflags = -lgdi32 -lopengl32 -static
 
 rule compile
-  command = $cxx $cflags -c $in -o $out
+  command = $cxx $cxxflags -c $in -o $out
+  description = Compiling $in
+
+rule compilec
+  command = $cc $cflags -c $in -o $out
   description = Compiling $in
 
 rule link
@@ -25,10 +31,11 @@ build thirdparty/imgui/imgui_tables.o: compile thirdparty/imgui/imgui_tables.cpp
 build thirdparty/imgui/imgui_widgets.o: compile thirdparty/imgui/imgui_widgets.cpp
 build thirdparty/imgui/backends/imgui_impl_glfw.o: compile thirdparty/imgui/backends/imgui_impl_glfw.cpp
 build thirdparty/imgui/backends/imgui_impl_opengl3.o: compile thirdparty/imgui/backends/imgui_impl_opengl3.cpp
+build thirdparty/nanovg/nanovg.o: compilec thirdparty/nanovg/nanovg.c
 build src/main.o: compile src/main.cpp
 build src/window.o: compile src/window.cpp
 build src/state.o: compile src/state.cpp
 build src/gfx.o: compile src/gfx.cpp
-build gsmith: link src/main.o src/window.o src/state.o src/gfx.o thirdparty/libtrippin/trippin/common.o thirdparty/libtrippin/trippin/error.o thirdparty/libtrippin/trippin/iofs.o thirdparty/libtrippin/trippin/log.o thirdparty/libtrippin/trippin/math.o thirdparty/libtrippin/trippin/memory.o thirdparty/libtrippin/trippin/string.o thirdparty/libtrippin/trippin/util.o thirdparty/imgui/imgui.o thirdparty/imgui/imgui_demo.o thirdparty/imgui/imgui_draw.o thirdparty/imgui/imgui_tables.o thirdparty/imgui/imgui_widgets.o thirdparty/imgui/backends/imgui_impl_glfw.o thirdparty/imgui/backends/imgui_impl_opengl3.o
+build gsmith: link src/main.o src/window.o src/state.o src/gfx.o thirdparty/libtrippin/trippin/common.o thirdparty/libtrippin/trippin/error.o thirdparty/libtrippin/trippin/iofs.o thirdparty/libtrippin/trippin/log.o thirdparty/libtrippin/trippin/math.o thirdparty/libtrippin/trippin/memory.o thirdparty/libtrippin/trippin/string.o thirdparty/libtrippin/trippin/util.o thirdparty/imgui/imgui.o thirdparty/imgui/imgui_demo.o thirdparty/imgui/imgui_draw.o thirdparty/imgui/imgui_tables.o thirdparty/imgui/imgui_widgets.o thirdparty/imgui/backends/imgui_impl_glfw.o thirdparty/imgui/backends/imgui_impl_opengl3.o thirdparty/nanovg/nanovg.o
 
 default gsmith

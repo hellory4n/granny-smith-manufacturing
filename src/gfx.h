@@ -1,9 +1,10 @@
 #pragma once
 
 #include <trippin/common.h>
+#include <trippin/error.h>
 #include <trippin/math.h>
 
-#include "trippin/error.h"
+// TODO am i actually gonna use this?
 
 namespace gsm {
 
