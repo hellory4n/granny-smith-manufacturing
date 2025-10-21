@@ -8,6 +8,250 @@
 
 #include "state.h"
 
+void gsm::clear_screen(tr::Color color)
+{
+	tr::Vec4<float32> vec4_color = color;
+	glClearColor(vec4_color.x, vec4_color.y, vec4_color.z, vec4_color.w);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+gsm::Mesh::Mesh(
+	tr::Array<const gsm::VertexAttribute> format, const void* buffer, usize length,
+	const gsm::Triangle* indices, usize triangle_count, gsm::MeshUsage usage
+)
+{
+	_index_count = uint32(triangle_count * 3);
+	_usage = usage;
+
+	// vao
+	glGenVertexArrays(1, &_vao);
+	glBindVertexArray(_vao);
+
+	// vbo
+	glGenBuffers(1, &_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+
+	GLenum glusage;
+	switch (usage) {
+	case MeshUsage::READONLY:
+		glusage = GL_STATIC_DRAW;
+		break;
+	case MeshUsage::MUTABLE:
+		glusage = GL_DYNAMIC_DRAW;
+		break;
+	case MeshUsage::STREAMED:
+		glusage = GL_STREAM_DRAW;
+		break;
+	};
+	glBufferData(GL_ARRAY_BUFFER, GLsizeiptr(length), buffer, glusage);
+
+	// figure out the format :DDDD
+	// vertex size
+	// TODO will padding completely ruin this?
+	usize sizeof_vert = 0; // in bytes
+	for (auto [_, attrib] : format) {
+		switch (attrib.type) {
+		case VertexAttributeType::INT32:
+			sizeof_vert += sizeof(int32);
+			break;
+		case VertexAttributeType::UINT32:
+			sizeof_vert += sizeof(uint32);
+			break;
+		case VertexAttributeType::FLOAT32:
+			sizeof_vert += sizeof(float32);
+			break;
+		case VertexAttributeType::FLOAT64:
+			sizeof_vert += sizeof(float64);
+			break;
+		case VertexAttributeType::VEC2_INT32:
+			sizeof_vert += sizeof(int32) * 2;
+			break;
+		case VertexAttributeType::VEC2_UINT32:
+			sizeof_vert += sizeof(uint32) * 2;
+			break;
+		case VertexAttributeType::VEC2_FLOAT32:
+			sizeof_vert += sizeof(float32) * 2;
+			break;
+		case VertexAttributeType::VEC2_FLOAT64:
+			sizeof_vert += sizeof(float64) * 2;
+			break;
+		case VertexAttributeType::VEC3_INT32:
+			sizeof_vert += sizeof(int32) * 3;
+			break;
+		case VertexAttributeType::VEC3_UINT32:
+			sizeof_vert += sizeof(uint32) * 3;
+			break;
+		case VertexAttributeType::VEC3_FLOAT32:
+			sizeof_vert += sizeof(float32) * 3;
+			break;
+		case VertexAttributeType::VEC3_FLOAT64:
+			sizeof_vert += sizeof(float64) * 3;
+			break;
+		case VertexAttributeType::VEC4_INT32:
+			sizeof_vert += sizeof(int32) * 4;
+			break;
+		case VertexAttributeType::VEC4_UINT32:
+			sizeof_vert += sizeof(uint32) * 4;
+			break;
+		case VertexAttributeType::VEC4_FLOAT32:
+			sizeof_vert += sizeof(float32) * 4;
+			break;
+		case VertexAttributeType::VEC4_FLOAT64:
+			sizeof_vert += sizeof(float64) * 4;
+			break;
+		};
+	}
+
+	// vertex attribs
+	for (auto [i, attrib] : format) {
+		uint32 size = 0;
+		switch (attrib.type) {
+		case VertexAttributeType::INT32:
+		case VertexAttributeType::UINT32:
+		case VertexAttributeType::FLOAT32:
+		case VertexAttributeType::FLOAT64:
+			size = 1;
+			break;
+
+		case VertexAttributeType::VEC2_INT32:
+		case VertexAttributeType::VEC2_UINT32:
+		case VertexAttributeType::VEC2_FLOAT32:
+		case VertexAttributeType::VEC2_FLOAT64:
+			size = 2;
+			break;
+
+		case VertexAttributeType::VEC3_INT32:
+		case VertexAttributeType::VEC3_UINT32:
+		case VertexAttributeType::VEC3_FLOAT32:
+		case VertexAttributeType::VEC3_FLOAT64:
+			size = 3;
+			break;
+
+		case VertexAttributeType::VEC4_INT32:
+		case VertexAttributeType::VEC4_UINT32:
+		case VertexAttributeType::VEC4_FLOAT32:
+		case VertexAttributeType::VEC4_FLOAT64:
+			size = 4;
+			break;
+		}
+
+		bool ipointer = false;
+		GLenum type = 0;
+		switch (attrib.type) {
+		case VertexAttributeType::INT32:
+		case VertexAttributeType::VEC2_INT32:
+		case VertexAttributeType::VEC3_INT32:
+		case VertexAttributeType::VEC4_INT32:
+			ipointer = true;
+			type = GL_INT;
+			break;
+
+		case VertexAttributeType::UINT32:
+		case VertexAttributeType::VEC2_UINT32:
+		case VertexAttributeType::VEC3_UINT32:
+		case VertexAttributeType::VEC4_UINT32:
+			ipointer = true;
+			type = GL_UNSIGNED_INT;
+			break;
+
+		case VertexAttributeType::FLOAT32:
+		case VertexAttributeType::VEC2_FLOAT32:
+		case VertexAttributeType::VEC3_FLOAT32:
+		case VertexAttributeType::VEC4_FLOAT32:
+			ipointer = false;
+			type = GL_FLOAT;
+			break;
+
+		case VertexAttributeType::FLOAT64:
+		case VertexAttributeType::VEC2_FLOAT64:
+		case VertexAttributeType::VEC3_FLOAT64:
+		case VertexAttributeType::VEC4_FLOAT64:
+			ipointer = false;
+			type = GL_DOUBLE;
+			break;
+		}
+
+		if (ipointer) {
+			glVertexAttribIPointer(
+				uint32(i), GLint(size), type, GLsizei(sizeof_vert),
+				reinterpret_cast<const void*>(attrib.offset)
+			);
+		}
+		else {
+			glVertexAttribPointer(
+				uint32(i), GLint(size), type, 0u, GLsizei(sizeof_vert),
+				reinterpret_cast<const void*>(attrib.offset)
+			);
+		}
+		glEnableVertexAttribArray(uint32(i));
+	}
+
+	// ebo
+	glGenBuffers(1, &_ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
+	glBufferData(
+		GL_ELEMENT_ARRAY_BUFFER, GLsizeiptr(triangle_count * sizeof(Triangle)), indices,
+		glusage
+	);
+
+	// unbind vao
+	glBindVertexArray(0);
+
+	// TODO this might get too noisy
+	tr::info("uploaded mesh (vao %u, vbo %u, ebo %u)", _vao, _vbo, _ebo);
+}
+
+void gsm::Mesh::free()
+{
+	glDeleteVertexArrays(1, &_vao);
+	glDeleteBuffers(1, &_vbo);
+	glDeleteBuffers(1, &_ebo);
+	tr::info("freed mesh (vao %u)", _vao);
+
+	_vao = 0;
+	_vbo = 0;
+	_ebo = 0;
+	_index_count = 0;
+}
+
+void gsm::Mesh::draw(uint32 instances) const
+{
+	TR_ASSERT_MSG(_vao != 0, "you doofus initialize the mesh");
+	glBindVertexArray(_vao);
+	glDrawElementsInstanced(
+		GL_TRIANGLES, GLsizei(_index_count), GL_UNSIGNED_INT, nullptr, GLsizei(instances)
+	);
+	glBindVertexArray(0);
+}
+
+void gsm::Mesh::update_data(
+	const void* buffer, usize length, const Triangle* indices, usize triangle_count
+)
+{
+	if (_usage == MeshUsage::READONLY) {
+		tr::panic("trying to update readonly mesh. do you know what readonly means?");
+	}
+
+	GLenum glusage;
+	switch (_usage) {
+	case MeshUsage::READONLY:
+		glusage = GL_STATIC_DRAW;
+		break;
+	case MeshUsage::MUTABLE:
+		glusage = GL_DYNAMIC_DRAW;
+		break;
+	case MeshUsage::STREAMED:
+		glusage = GL_STREAM_DRAW;
+		break;
+	};
+
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+	glBufferData(GL_ARRAY_BUFFER, GLsizeiptr(length), buffer, glusage);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, GLsizeiptr(triangle_count * 3), indices, glusage);
+}
+
 void gsm::Shader::_check_compilation(const char* shader_type) const
 {
 	int success;

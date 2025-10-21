@@ -1,9 +1,11 @@
 #include <trippin/common.h>
 #include <trippin/log.h>
+#include <trippin/math.h>
 
 #include <GL/gl.h>
 #include <imgui.h>
 
+#include "gfx.h"
 #include "state.h"
 #include "window.h"
 
@@ -18,11 +20,8 @@ int main()
 
 	while (!glfwWindowShouldClose(gsm::_gsm.window)) {
 		gsm::start_main_loop();
-
-		glClearColor(1, 1, 1, 1);
-		glClear(GL_COLOR_BUFFER_BIT);
+		gsm::clear_screen(tr::COLOR_WHITE);
 		ImGui::ShowDemoWindow();
-
 		gsm::end_main_loop();
 	}
 }
