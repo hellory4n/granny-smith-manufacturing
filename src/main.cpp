@@ -7,6 +7,8 @@
 #include "gfx.h"
 #include "nanovg/nanovg.h"
 #include "state.h"
+#include "trippin/iofs.h"
+#include "ui.h"
 #include "window.h"
 
 using gsm::_gsm;
@@ -14,16 +16,21 @@ using gsm::_gsm;
 int main()
 {
 	tr::use_log_file("log.txt");
+	tr::set_paths("assets", "granny-smith-manufacturing");
 	tr::init();
 	TR_DEFER(tr::free());
 
 	gsm::init_window();
 	TR_DEFER(gsm::free_window());
 
+	gsm::setup();
+
 	while (!glfwWindowShouldClose(gsm::_gsm.window)) {
 		gsm::start_main_loop();
 		gsm::clear_screen(tr::COLOR_WHITE);
 
+		gsm::dockspace();
+		gsm::popups();
 		ImGui::ShowDemoWindow();
 
 		nvgBeginPath(_gsm.vg);

@@ -36,6 +36,7 @@ build src/main.o: compile src/main.cpp
 build src/window.o: compile src/window.cpp
 build src/state.o: compile src/state.cpp
 build src/gfx.o: compile src/gfx.cpp
-build gsmith: link src/main.o src/window.o src/state.o src/gfx.o thirdparty/libtrippin/trippin/common.o thirdparty/libtrippin/trippin/error.o thirdparty/libtrippin/trippin/iofs.o thirdparty/libtrippin/trippin/log.o thirdparty/libtrippin/trippin/math.o thirdparty/libtrippin/trippin/memory.o thirdparty/libtrippin/trippin/string.o thirdparty/libtrippin/trippin/util.o thirdparty/imgui/imgui.o thirdparty/imgui/imgui_demo.o thirdparty/imgui/imgui_draw.o thirdparty/imgui/imgui_tables.o thirdparty/imgui/imgui_widgets.o thirdparty/imgui/backends/imgui_impl_glfw.o thirdparty/imgui/backends/imgui_impl_opengl3.o thirdparty/nanovg/nanovg.o
+build src/ui.o: compile src/ui.cpp
+build gsmith: link src/main.o src/window.o src/state.o src/gfx.o src/ui.o thirdparty/libtrippin/trippin/common.o thirdparty/libtrippin/trippin/error.o thirdparty/libtrippin/trippin/iofs.o thirdparty/libtrippin/trippin/log.o thirdparty/libtrippin/trippin/math.o thirdparty/libtrippin/trippin/memory.o thirdparty/libtrippin/trippin/string.o thirdparty/libtrippin/trippin/util.o thirdparty/imgui/imgui.o thirdparty/imgui/imgui_demo.o thirdparty/imgui/imgui_draw.o thirdparty/imgui/imgui_tables.o thirdparty/imgui/imgui_widgets.o thirdparty/imgui/backends/imgui_impl_glfw.o thirdparty/imgui/backends/imgui_impl_opengl3.o thirdparty/nanovg/nanovg.o
 
 default gsmith
