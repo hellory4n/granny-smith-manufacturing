@@ -48,11 +48,11 @@ void gsm::setup()
 	colors[ImGuiCol_ResizeGrip] = ImVec4(0.28f, 0.28f, 0.28f, 0.29f);
 	colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.44f, 0.44f, 0.44f, 0.29f);
 	colors[ImGuiCol_ResizeGripActive] = ImVec4(0.40f, 0.44f, 0.47f, 1.00f);
-	colors[ImGuiCol_Tab] = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-	colors[ImGuiCol_TabHovered] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-	colors[ImGuiCol_TabActive] = ImVec4(0.20f, 0.20f, 0.20f, 0.36f);
-	colors[ImGuiCol_TabUnfocused] = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-	colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+	colors[ImGuiCol_Tab] = ImVec4(0.00f, 0.00f, 0.00f, 0.1f);
+	colors[ImGuiCol_TabHovered] = ImVec4(1.f, 1.f, 1.f, 0.50f);
+	colors[ImGuiCol_TabSelected] = ImVec4(0.0f, 0.0f, 0.0f, 0.5f);
+	colors[ImGuiCol_TabDimmed] = ImVec4(0.00f, 0.00f, 0.00f, 0.0f);
+	colors[ImGuiCol_TabDimmedSelected] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
 	colors[ImGuiCol_DockingPreview] = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
 	colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
 	colors[ImGuiCol_PlotLines] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
@@ -69,7 +69,7 @@ void gsm::setup()
 	colors[ImGuiCol_NavHighlight] = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
 	colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 0.00f, 0.00f, 0.70f);
 	colors[ImGuiCol_NavWindowingDimBg] = ImVec4(1.00f, 0.00f, 0.00f, 0.20f);
-	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(1.00f, 0.00f, 0.00f, 0.35f);
+	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.5f);
 
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.WindowPadding = ImVec2(8.00f, 8.00f);
@@ -121,39 +121,37 @@ void gsm::dockspace()
 
 	// default dock stuff
 	// TODO wtf is this
-	// static bool is_first_time = true;
-	// if (is_first_time) {
-	// 	DockBuilderRemoveNode(dockspace_id);
-	// 	DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
-	// 	DockBuilderSetNodeSize(dockspace_id, GetMainViewport()->Size);
+	static bool is_first_time = true;
+	if (is_first_time) {
+		DockBuilderRemoveNode(dockspace_id);
+		DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
+		DockBuilderSetNodeSize(dockspace_id, GetMainViewport()->Size);
 
-	// 	ImGuiID dock_main_id = dockspace_id;
-	// 	ImGuiID dock_id_left = DockBuilderSplitNode(
-	// 		dock_main_id, ImGuiDir_Left, 0.26f, nullptr, nullptr
-	// 	);
-	// 	ImGuiID dock_id_left_top;
-	// 	ImGuiID dock_id_left_bottom = DockBuilderSplitNode(
-	// 		dock_id_left, ImGuiDir_Down, 0.35f, nullptr, &dock_id_left_top
-	// 	);
-	// 	ImGuiID dock_id_left_bottom_top;
-	// 	ImGuiID dock_id_left_bottom_bottom = DockBuilderSplitNode(
-	// 		dock_id_left_bottom, ImGuiDir_Down, 0.5f, nullptr, &dock_id_left_bottom_top
-	// 	);
+		ImGuiID dock_main_id = dockspace_id;
+		ImGuiID dock_id_left =
+			DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.26f, nullptr, nullptr);
+		ImGuiID dock_id_right =
+			DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.26f, nullptr, nullptr);
+		ImGuiID dock_id_down =
+			DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.075f, nullptr, nullptr);
 
-	// 	DockBuilderDockWindow("debug", dock_id_left_top);
-	// 	DockBuilderDockWindow("about", dock_id_left_bottom_top);
-	// 	DockBuilderDockWindow("help", dock_id_left_bottom_bottom);
+		DockBuilderDockWindow("Scene", dock_id_left);
+		DockBuilderDockWindow("Inspector", dock_id_right);
+		DockBuilderDockWindow("Level Settings", dock_id_right);
+		DockBuilderDockWindow("Tools", dock_id_down);
 
-	// 	DockBuilderFinish(dockspace_id);
+		DockBuilderFinish(dockspace_id);
 
-	// 	is_first_time = false;
-	// }
+		is_first_time = false;
+	}
 }
 
 void gsm::menu_bar()
 {
 	TR_DEFER(EndMenuBar());
 	if (BeginMenuBar()) {
+		bool open_about = false;
+
 		if (BeginMenu("File")) {
 			TR_DEFER(EndMenu());
 			MenuItem("New", "Ctrl+N");
@@ -161,7 +159,9 @@ void gsm::menu_bar()
 			MenuItem("Save", "Ctrl+S");
 			MenuItem("Save as...", "Ctrl+Shift+S");
 			Separator();
-			MenuItem("Quit", "Ctrl+Q");
+			if (MenuItem("Quit", "Ctrl+Q")) {
+				glfwSetWindowShouldClose(_gsm.window, true);
+			}
 		}
 		if (BeginMenu("Edit")) {
 			TR_DEFER(EndMenu());
@@ -174,31 +174,73 @@ void gsm::menu_bar()
 		}
 		if (BeginMenu("Help")) {
 			TR_DEFER(EndMenu());
-			MenuItem("About", nullptr, &_gsm.show_about);
+			if (MenuItem("About")) {
+				open_about = true;
+			}
 		}
+
+		if (open_about) {
+			ImGui::OpenPopup("About");
+		}
+
+		gsm::popups();
 	}
 }
 
 void gsm::popups()
 {
-	if (_gsm.show_about) {
-		gsm::about();
-	}
+	gsm::about();
 }
 
 void gsm::about()
 {
-	TR_DEFER(End());
-	if (!Begin("About", &_gsm.show_about, ImGuiWindowFlags_AlwaysAutoResize)) {
-		return;
+	if (BeginPopupModal("About", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+		TR_DEFER(EndPopup());
+
+		Text("Granny Smith Manufacturing %s", VERSION_STR);
+		Text("Copyright (c) 2025 hellory4n <hellory4n@gmail.com>");
+		Text("Licensed under the zlib/libpng license");
+		TextLinkOpenURL(
+			"GitHub", "https://github.com/hellory4n/granny-smith-manufacturing"
+		);
+		Separator();
+		Text("Using:");
+		BulletText("libtrippin %s", tr::VERSION);
+		BulletText("Using GLFW %s", glfwGetVersionString());
+		BulletText("Using Dear ImGui %s", IMGUI_VERSION);
+
+		if (Button("Close")) {
+			CloseCurrentPopup();
+		}
 	}
-	Text("Granny Smith Manufacturing %s", VERSION_STR);
-	Text("Copyright (c) 2025 hellory4n <hellory4n@gmail.com>");
-	Text("Licensed under the zlib/libpng license");
-	TextLinkOpenURL("GitHub", "https://github.com/hellory4n/granny-smith-manufacturing");
-	Separator();
-	Text("Using:");
-	BulletText("libtrippin %s", tr::VERSION);
-	BulletText("Using GLFW %s", glfwGetVersionString());
-	BulletText("Using Dear ImGui %s", IMGUI_VERSION);
+}
+
+void gsm::scene()
+{
+	Begin("Scene");
+	TR_DEFER(End());
+}
+
+void gsm::inspector()
+{
+	Begin("Inspector");
+	TR_DEFER(End());
+}
+
+void gsm::level_settings()
+{
+	Begin("Level Settings");
+	TR_DEFER(End());
+}
+
+void gsm::tools()
+{
+	// weirdly hiding the tab bar isn't in ImGuiWindowFlags
+	ImGuiWindowClass window_class;
+	window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
+	ImGui::SetNextWindowClass(&window_class);
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize;
+	Begin("Tools", nullptr, flags);
+	Button("Cocque");
+	TR_DEFER(End());
 }

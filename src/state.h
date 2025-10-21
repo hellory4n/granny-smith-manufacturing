@@ -11,8 +11,6 @@ extern struct GrannySmithManufacturing
 	GLFWwindow* window;
 	NVGcontext* vg;
 	tr::Arena asset_arena;
-
-	bool show_about = false;
 } _gsm;
 
 constexpr const char* VERSION_STR = "v1";

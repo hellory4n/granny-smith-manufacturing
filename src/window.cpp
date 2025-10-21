@@ -31,7 +31,7 @@ void gsm::init_window()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_CONTEXT_DEBUG, true);
 
-	_gsm.window = glfwCreateWindow(800, 600, "Granny Smith Manufacturing", nullptr, nullptr);
+	_gsm.window = glfwCreateWindow(1280, 720, "Granny Smith Manufacturing", nullptr, nullptr);
 	if (_gsm.window == nullptr) {
 		tr::panic("window busted");
 	}

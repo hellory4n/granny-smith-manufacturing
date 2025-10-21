@@ -10,8 +10,9 @@ void menu_bar();
 void popups();
 void about();
 
-void tools();
+void scene();
 void inspector();
 void level_settings();
+void tools();
 
 } // namespace gsm

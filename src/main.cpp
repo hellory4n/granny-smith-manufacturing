@@ -30,8 +30,10 @@ int main()
 		gsm::clear_screen(tr::COLOR_WHITE);
 
 		gsm::dockspace();
-		gsm::popups();
-		ImGui::ShowDemoWindow();
+		gsm::scene();
+		gsm::inspector();
+		gsm::level_settings();
+		gsm::tools();
 
 		nvgBeginPath(_gsm.vg);
 		nvgMoveTo(_gsm.vg, 52, 67);
