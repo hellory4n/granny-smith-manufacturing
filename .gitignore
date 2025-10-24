@@ -22,3 +22,6 @@ imgui.ini
 .vscode
 .idea
 .zed
+
+# my pc is so slow i can feel it compiling each line of code
+*.o.tmp

@@ -5,6 +5,7 @@
 #include <trippin/memory.h>
 
 #include <GLFW/glfw3.h>
+#include <IconsMaterialSymbols.h>
 #include <imgui.h>
 #include <imgui_internal.h>
 
@@ -16,8 +17,15 @@ using namespace ImGui;
 void gsm::setup()
 {
 	ImGuiIO& io = ImGui::GetIO();
+	io.Fonts->AddFontFromFileTTF(tr::path(tr::scratchpad(), "app://FunnelSans-Regular.ttf"));
+	ImFontConfig config;
+	config.MergeMode = true;
+	config.GlyphMinAdvanceX = 12;
+	// otherwise it goes offcenter for some reason
+	config.GlyphOffset = {0, 5};
 	io.Fonts->AddFontFromFileTTF(
-		tr::path(tr::scratchpad(), "app://FunnelSans-Regular.ttf"), 18
+		tr::path(tr::scratchpad(), "app://MaterialSymbolsSharp[FILL,GRAD,opsz,wght].ttf"),
+		12, &config
 	);
 
 	// theme
@@ -26,7 +34,7 @@ void gsm::setup()
 	colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
 	colors[ImGuiCol_WindowBg] = ImVec4(0.05f, 0.05f, 0.07f, 0.9f);
 	colors[ImGuiCol_TitleBg] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
-	colors[ImGuiCol_TitleBgActive] = ImVec4(0.447f, 0.223f, 0.886f, 1.00f);
+	colors[ImGuiCol_TitleBgActive] = ImVec4(0.05f, 0.05f, 0.05f, 1.0f);
 	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
 	colors[ImGuiCol_MenuBarBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
 	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
@@ -50,8 +58,8 @@ void gsm::setup()
 	colors[ImGuiCol_ResizeGripActive] = ImVec4(0.40f, 0.44f, 0.47f, 1.00f);
 	colors[ImGuiCol_Tab] = ImVec4(0.00f, 0.00f, 0.00f, 0.1f);
 	colors[ImGuiCol_TabHovered] = ImVec4(1.f, 1.f, 1.f, 0.50f);
-	colors[ImGuiCol_TabSelected] = ImVec4(0.0f, 0.0f, 0.0f, 0.5f);
-	colors[ImGuiCol_TabDimmed] = ImVec4(0.00f, 0.00f, 0.00f, 0.0f);
+	colors[ImGuiCol_TabSelected] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+	colors[ImGuiCol_TabDimmed] = ImVec4(0.00f, 0.00f, 0.00f, 0.1f);
 	colors[ImGuiCol_TabDimmedSelected] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
 	colors[ImGuiCol_DockingPreview] = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
 	colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
@@ -120,34 +128,45 @@ void gsm::dockspace()
 	DockSpace(dockspace_id, ImVec2(0.0f, 0.0f));
 
 	// default dock stuff
-	// TODO wtf is this
 	static bool is_first_time = true;
 	if (is_first_time) {
-		DockBuilderRemoveNode(dockspace_id);
-		DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
-		DockBuilderSetNodeSize(dockspace_id, GetMainViewport()->Size);
+		// don't override the user's settings
+		if (tr::path_exists("imgui.ini")) {
+			is_first_time = false;
+		}
+		else {
+			DockBuilderRemoveNode(dockspace_id);
+			DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
+			DockBuilderSetNodeSize(dockspace_id, GetMainViewport()->Size);
 
-		ImGuiID dock_main_id = dockspace_id;
-		ImGuiID dock_id_left =
-			DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.26f, nullptr, nullptr);
-		ImGuiID dock_id_right =
-			DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.26f, nullptr, nullptr);
-		ImGuiID dock_id_down =
-			DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.075f, nullptr, nullptr);
+			ImGuiID dock_main_id = dockspace_id;
+			ImGuiID dock_id_left = DockBuilderSplitNode(
+				dock_main_id, ImGuiDir_Left, 0.26f, nullptr, nullptr
+			);
+			ImGuiID dock_id_right = DockBuilderSplitNode(
+				dock_main_id, ImGuiDir_Right, 0.26f, nullptr, nullptr
+			);
+			ImGuiID dock_id_down = DockBuilderSplitNode(
+				dock_main_id, ImGuiDir_Down, 0.075f, nullptr, nullptr
+			);
 
-		DockBuilderDockWindow("Scene", dock_id_left);
-		DockBuilderDockWindow("Inspector", dock_id_right);
-		DockBuilderDockWindow("Level Settings", dock_id_right);
-		DockBuilderDockWindow("Tools", dock_id_down);
+			DockBuilderDockWindow("Scene", dock_id_left);
+			DockBuilderDockWindow("Inspector", dock_id_right);
+			DockBuilderDockWindow("Level Settings", dock_id_right);
+			DockBuilderDockWindow("Tools", dock_id_down);
 
-		DockBuilderFinish(dockspace_id);
+			DockBuilderFinish(dockspace_id);
 
-		is_first_time = false;
+			is_first_time = false;
+		}
 	}
 }
 
 void gsm::menu_bar()
 {
+	// shortcuts
+	bool sc_quit = Shortcut(ImGuiMod_Ctrl | ImGuiKey_Q);
+
 	TR_DEFER(EndMenuBar());
 	if (BeginMenuBar()) {
 		bool open_about = false;
@@ -159,9 +178,7 @@ void gsm::menu_bar()
 			MenuItem("Save", "Ctrl+S");
 			MenuItem("Save as...", "Ctrl+Shift+S");
 			Separator();
-			if (MenuItem("Quit", "Ctrl+Q")) {
-				glfwSetWindowShouldClose(_gsm.window, true);
-			}
+			MenuItem("Quit", "Ctrl+Q", &sc_quit);
 		}
 		if (BeginMenu("Edit")) {
 			TR_DEFER(EndMenu());
@@ -184,6 +201,11 @@ void gsm::menu_bar()
 		}
 
 		gsm::popups();
+	}
+
+	// actually do the shortcuts
+	if (sc_quit) {
+		glfwSetWindowShouldClose(_gsm.window, true);
 	}
 }
 
@@ -219,6 +241,34 @@ void gsm::scene()
 {
 	Begin("Scene");
 	TR_DEFER(End());
+
+	// struct Item
+	// {
+	// 	const char* name;
+	// 	enum class Type
+	// 	{
+	// 		BODY,
+	// 		DUDE,
+	// 		POWERUP,
+	// 		BREAKABLE,
+	// 		SENSOR,
+	// 		JOINT
+	// 	} type;
+	// };
+
+	constexpr const char* ITEMS[] = {
+		ICON_MS_STYLUS_FOUNTAIN_PEN " body", ICON_MS_SPRINT " dude",
+		ICON_MS_SPORTS_BASEBALL " powerup",  ICON_MS_DESTRUCTION " breakable",
+		ICON_MS_SENSORS " sensor",           ICON_MS_PET_SUPPLIES " joint"
+	};
+	static int selected = -1;
+	for (int i = 0; i < 6; i++) {
+		PushID(i);
+		if (Selectable(ITEMS[i], selected == i)) {
+			selected = i;
+		}
+		PopID();
+	}
 }
 
 void gsm::inspector()
@@ -237,9 +287,9 @@ void gsm::tools()
 {
 	// weirdly hiding the tab bar isn't in ImGuiWindowFlags
 	ImGuiWindowClass window_class;
-	window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
+	window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_AutoHideTabBar;
 	ImGui::SetNextWindowClass(&window_class);
-	ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize;
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar;
 	Begin("Tools", nullptr, flags);
 	Button("Cocque");
 	TR_DEFER(End());

@@ -36,8 +36,8 @@ int main()
 		gsm::tools();
 
 		nvgBeginPath(_gsm.vg);
-		nvgMoveTo(_gsm.vg, 52, 67);
-		nvgLineTo(_gsm.vg, 71, 197);
+		nvgMoveTo(_gsm.vg, 552, 67);
+		nvgLineTo(_gsm.vg, 571, 197);
 		nvgStrokeColor(_gsm.vg, nvgRGBA(0, 0, 0, 180));
 		nvgStrokeWidth(_gsm.vg, 3.0f);
 		nvgStroke(_gsm.vg);
