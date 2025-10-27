@@ -1,4 +1,13 @@
-# editor-specific
+# node.js
+*.log
+*.log.*
+node_modules
+
+out/
+dist/
+code.js
+
+# editor specific
 .vscode
 .idea
 .zed
