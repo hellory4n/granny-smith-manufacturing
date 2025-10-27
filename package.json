@@ -1,14 +1,15 @@
 {
     "name": "granny-smith-manufacturing",
+    "description": "the biggest most massive level editor of all time for the biggest most massive mobile game smash hit by mediocre ab granny smith by mediocre ab",
+    "author": "hellory4n",
+    "license": "Zlib",
     "version": "1.0.0",
-    "description": "Your Figma Plugin",
+    "homepage": "https://github.com/hellory4n/granny-smith-manufacturing",
     "private": true,
     "scripts": {
         "build": "webpack",
         "dev": "webpack --watch"
     },
-    "author": "",
-    "license": "",
     "devDependencies": {
         "@figma/eslint-plugin-figma-plugins": "*",
         "@figma/plugin-typings": "^1.119.0",

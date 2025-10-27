@@ -1,5 +1,3 @@
-import * as util from "./util";
-
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__);
 
@@ -17,7 +15,7 @@ figma.ui.onmessage = (msg: { type: string; count: number }) => {
 		for (let i = 0; i < numberOfRectangles; i++) {
 			const rect = figma.createEllipse();
 			rect.x = i * 150;
-			rect.fills = [{ type: "SOLID", color: util.getColor() }];
+			rect.fills = [{ type: "SOLID", color: { r: 1, g: 1, b: 1 } }];
 			figma.currentPage.appendChild(rect);
 			nodes.push(rect);
 		}
