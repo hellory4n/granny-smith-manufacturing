@@ -1,10 +1,4 @@
-// This plugin will open a window to prompt the user to enter a number, and
-// it will then create that many rectangles on the screen.
-
-// This file holds the main code for plugins. Code in this file has access to
-// the *figma document* via the figma global object.
-// You can access browser APIs in the <script> tag inside "ui.html" which has a
-// full browser environment (See https://www.figma.com/plugin-docs/how-plugins-run).
+import * as util from "./util";
 
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__);
@@ -21,9 +15,9 @@ figma.ui.onmessage = (msg: { type: string; count: number }) => {
 
 		const nodes: SceneNode[] = [];
 		for (let i = 0; i < numberOfRectangles; i++) {
-			const rect = figma.createRectangle();
+			const rect = figma.createEllipse();
 			rect.x = i * 150;
-			rect.fills = [{ type: "SOLID", color: { r: 1, g: 0.5, b: 0 } }];
+			rect.fills = [{ type: "SOLID", color: util.getColor() }];
 			figma.currentPage.appendChild(rect);
 			nodes.push(rect);
 		}

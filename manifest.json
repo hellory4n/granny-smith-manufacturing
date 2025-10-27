@@ -2,7 +2,7 @@
   "name": "granny-smith-manufacturing",
   "id": "1564426520258042263",
   "api": "1.0.0",
-  "main": "code.js",
+  "main": "dist/main.js",
   "capabilities": [],
   "enableProposedApi": false,
   "documentAccess": "dynamic-page",

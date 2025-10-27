@@ -1,4 +1,4 @@
-<img src="./assets/massive_logo.png" alt="massive logo" width="200">
+<img src="./logo.png" alt="massive logo" width="200">
 
 # granny smith manufacturing
 
