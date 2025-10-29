@@ -18,6 +18,7 @@
 		reader.onload = () => {
 			const content = reader.result;
 			output.textContent = content;
+			parent.postMessage({ pluginMessage: { type: "open-xml:" + content } }, "*");
 		};
 		reader.readAsText(file);
 	});

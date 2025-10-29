@@ -275,18 +275,18 @@ export interface Joint {
 	z?: number;
 }
 
-export function loadDecal(_path: string): Decals {
+export function loadDecal(path: string): Decals {
 	throw "TODO";
 }
 
-export function saveDecal(_decal: Decals, _path: string): void {
+export function saveDecal(decal: Decals, path: string): void {
 	throw "TODO";
 }
 
-export function loadLevel(_path: string): Level {
+export function loadLevel(path: string): Level {
 	throw "TODO";
 }
 
-export function saveLevel(_level: Level, _path: string): void {
+export function saveLevel(level: Level, path: string): void {
 	throw "TODO";
 }
