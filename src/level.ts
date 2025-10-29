@@ -31,11 +31,11 @@ export interface Level {
 	 */
 	background: string;
 	/**
-	 * @unsure in seconds
+	 * in seconds
 	 */
 	startDelay: number;
 	/**
-	 * @unsure in seconds
+	 * in seconds
 	 */
 	startDelayHard: number;
 	/**
@@ -172,9 +172,11 @@ export interface Body {
 	 */
 	hidden?: boolean;
 	/**
-	 * @noidea
+	 * - 'roll' makes granny turn to be on her feet when she lands on the terrain
+	 * - 'slip' disables granny from landing on the terrain or getting hurt from smacking into it
+	 * @unsure 'metal' might change the material type to metal
 	 */
-	surface?: string;
+	surface?: "roll" | "slip" | "metal roll";
 	// some fields might be missing since there's a lot of optional fields
 	// @noidea textures were too weird to include here just yet
 	/**

@@ -42,5 +42,8 @@
                 }
             ]
         }
+    },
+    "dependencies": {
+        "fast-xml-parser": "^5.3.0"
     }
 }
