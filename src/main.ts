@@ -3,9 +3,6 @@ import { msgLoadXml } from "./messages";
 
 figma.showUI(__html__);
 
-// typescript really doesn't like global variables
-// also this should be `let` but then eslint gets mad even tho i do change it later through another
-// function but it still works because this is a language based on hopes and dreams
 const ctx: Context = {};
 
 // Calls to "parent.postMessage" from within the HTML page will trigger this
