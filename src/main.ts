@@ -1,5 +1,5 @@
 import { Context } from "./ctx";
-import { msgLoadXml } from "./messages";
+import { msgLoadXml } from "./uimsg";
 
 figma.showUI(__html__);
 

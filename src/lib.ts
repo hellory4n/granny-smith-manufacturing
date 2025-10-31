@@ -44,3 +44,23 @@ export function rgb(hex: number): Color {
 	const b = hex & 0xff;
 	return new Color(r / 255.0, g / 255.0, b / 255.0, 1.0);
 }
+
+/**
+ * i hate javascript/typescript for an amazing reason <3
+ */
+export interface StringMap<T> {
+	[key: string]: T;
+}
+
+export function isAlpha(c: string): boolean {
+	// fuck unicode
+	return (c >= "a" && c <= "z") || (c >= "A" && c <= "Z") || c == "_";
+}
+
+export function isDigit(c: string): boolean {
+	return c >= "0" && c <= "9";
+}
+
+export function isAlphanumeric(c: string): boolean {
+	return isAlpha(c) || isDigit(c);
+}
