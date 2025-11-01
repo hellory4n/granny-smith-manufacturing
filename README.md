@@ -11,14 +11,10 @@ see also [KnShim](https://codeberg.org/knot126/KnShim)
 
 ## usage
 
-this is a figma plugin
-
-i'll publish it to the figma community and write a real guide later
-
-for now you just have to build it and import it from figma desktop
+don't.
 
 ## building
 
 A building or edifice is an enclosed structure with a roof, walls and often windows, usually standing permanently in one place, such as a house or factory. Buildings come in a variety of sizes, shapes, and functions, and have been adapted throughout history for numerous factors, from building materials available, to weather conditions, land pric...
 
-`npm install && npm run build`
+`go run .`
