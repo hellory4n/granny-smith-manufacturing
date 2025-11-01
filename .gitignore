@@ -1,3 +1,16 @@
+*.exe
+*.exe~
+*.dll
+*.so*
+*.dylib
+*.a
+*.lib
+
+*.test
+
+go.work
+go.work.sum
+
 # editor specific
 .vscode
 .idea
