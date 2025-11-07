@@ -7,13 +7,8 @@ import "encoding/xml"
 // @unsure = fields where idk small details such as the unit they're using
 // @noidea = fields where i have no no idea
 // @unused = fields that are in the xml but we don't use (most likely used in mediocre's own editor)
-// some typedefs are just for go's xml parser (since it can't handle some of the data)
-
-type Coords Vec4i
-
-func (c *Coords) UnmarshalText(text []byte) error {
-	return nil
-}
+// xml tags are used for documentation but we don't use go's marshal functions which use reflection
+// faffery to parse everything
 
 // decalma
 type Decal struct {

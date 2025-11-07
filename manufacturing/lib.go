@@ -1,7 +1,6 @@
 package manufacturing
 
 import (
-	"encoding/xml"
 	"fmt"
 	"strconv"
 	"strings"
@@ -81,106 +80,63 @@ func Assert(msg string, x bool) {
 	}
 }
 
-// implement parsing/saving all of the structs to xml
-func (v *Vec2f) UnmarshalXMLAttr(attr xml.Attr) error {
-	var parts []string = strings.Fields(attr.Value)
-	if len(parts) != 2 {
-		return fmt.Errorf("invalid Vec2f: %q", attr.Value)
-	}
-
-	var err error
-	v.X, err = strconv.ParseFloat(parts[0], 64)
+// Go™ fuck yourself
+func Must(err error) {
 	if err != nil {
-		return err
+		panic(err.Error())
 	}
-	v.Y, err = strconv.ParseFloat(parts[1], 64)
-	return err
 }
 
-func (v Vec2f) MarshalXMLAttr(name xml.Name) (xml.Attr, error) {
-	val := fmt.Sprintf("%f %f", v.X, v.Y)
-	return xml.Attr{Name: name, Value: val}, nil
-}
-
-func (v *Vec2f) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
-	var content string
-	if err := d.DecodeElement(&content, &start); err != nil {
-		return err
-	}
-
-	var parts []string = strings.Fields(content)
+func ParseVec2f(str string) (vec Vec2f, err error) {
+	var parts []string = strings.Fields(str)
 	if len(parts) != 2 {
-		return fmt.Errorf("invalid Vec2: %q", content)
+		return Vec2f{}, fmt.Errorf("invalid Vec2f: %q", str)
 	}
 
-	var err error
-	v.X, err = strconv.ParseFloat(parts[0], 64)
+	vec.X, err = strconv.ParseFloat(parts[0], 64)
 	if err != nil {
-		return err
+		return Vec2f{}, err
 	}
-	v.Y, err = strconv.ParseFloat(parts[1], 64)
-	return err
+	vec.Y, err = strconv.ParseFloat(parts[1], 64)
+	return vec, err
 }
 
-func (v Vec2f) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	val := fmt.Sprintf("%f %f", v.X, v.Y)
-	return e.EncodeElement(val, start)
+func (v Vec2f) String() string {
+	return fmt.Sprintf("%f %f", v.X, v.Y)
 }
 
-func (v *Vec2i) UnmarshalXMLAttr(attr xml.Attr) error {
-	var parts []string = strings.Fields(attr.Value)
-	if len(parts) != 2 {
-		return fmt.Errorf("invalid Vec2i: %q", attr.Value)
-	}
-
-	var err error
-	v.X, err = strconv.ParseInt(parts[0], 10, 64)
-	if err != nil {
-		return err
-	}
-	v.Y, err = strconv.ParseInt(parts[1], 10, 64)
-	return err
-}
-
-func (v Vec2i) MarshalXMLAttr(name xml.Name) (xml.Attr, error) {
-	val := fmt.Sprintf("%d %d", v.X, v.Y)
-	return xml.Attr{Name: name, Value: val}, nil
-}
-
-func (c *Color) UnmarshalXMLAttr(attr xml.Attr) error {
-	var parts []string = strings.Fields(attr.Value)
+func ParseColor(str string) (color Color, err error) {
+	var parts []string = strings.Fields(str)
 	if len(parts) != 4 && len(parts) != 3 {
-		return fmt.Errorf("invalid Color: %q", attr.Value)
+		return Color{}, fmt.Errorf("invalid Color: %q", str)
 	}
 
-	var err error
-	c.R, err = strconv.ParseFloat(parts[0], 64)
+	color.R, err = strconv.ParseFloat(parts[0], 64)
 	if err != nil {
-		return err
+		return Color{}, err
 	}
 
-	c.G, err = strconv.ParseFloat(parts[1], 64)
+	color.G, err = strconv.ParseFloat(parts[1], 64)
 	if err != nil {
-		return err
+		return Color{}, err
 	}
 
-	c.B, err = strconv.ParseFloat(parts[2], 64)
+	color.B, err = strconv.ParseFloat(parts[2], 64)
 	if err != nil {
-		return err
+		return Color{}, err
 	}
 
 	// alpha is optional
 	if len(parts) == 4 {
-		c.A, err = strconv.ParseFloat(parts[1], 64)
+		color.A, err = strconv.ParseFloat(parts[1], 64)
 	} else {
-		c.A = 1
+		color.A = 1
 	}
 
-	return err
+	return color, err
 }
 
-func (c Color) MarshalXMLAttr(name xml.Name) (xml.Attr, error) {
-	// @unsure can alpha be used everywhere?
-	val := fmt.Sprintf("%f %f %f %f", c.R, c.G, c.B, c.A)
-	return xml.Attr{Name: name, Value: val}, nil
+func (v Color) String() string {
+	// FIXME is alpha allowed everywhere?
+	return fmt.Sprintf("%f %f %f %f", v.R, v.G, v.B, v.A)
 }
