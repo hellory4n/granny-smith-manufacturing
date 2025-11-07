@@ -17,4 +17,4 @@ don't.
 
 A building or edifice is an enclosed structure with a roof, walls and often windows, usually standing permanently in one place, such as a house or factory. Buildings come in a variety of sizes, shapes, and functions, and have been adapted throughout history for numerous factors, from building materials available, to weather conditions, land pric...
 
-`go run .`
+`$ ninja && ./gsmanufacture`

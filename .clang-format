@@ -21,3 +21,7 @@ SpaceInEmptyBlock: false
 AllowShortIfStatementsOnASingleLine: true
 AllowShortLoopsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: Empty
+IndentPPDirectives: BeforeHash
+AlignConsecutiveMacros: false
+InsertNewlineAtEOF: true
+LineEnding: LF
