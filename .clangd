@@ -1,0 +1,9 @@
+CompileFlags:
+  Add:
+    # more warnings
+    - -Wuninitialized
+    - -Wshadow
+    - -Wconversion
+    - -Wextra-semi
+    - -Wnull-dereference
+    - -Wcast-qual

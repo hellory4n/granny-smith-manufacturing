@@ -1,3 +1,4 @@
+*.o
 *.exe
 *.exe~
 *.dll
@@ -5,11 +6,11 @@
 *.dylib
 *.a
 *.lib
+gsmanufacturing
 
-*.test
-
-go.work
-go.work.sum
+# ninja garbage
+.ninja_log
+.ninja_lock
 
 # editor specific
 .vscode

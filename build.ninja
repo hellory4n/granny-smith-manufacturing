@@ -1,0 +1,15 @@
+cc = gcc
+cflags = -std=c99 -Wall -Wextra -Wpedantic -g -Iinclude
+
+rule compile
+  command = $cc $cflags -c $in -o $out
+  description = Compiling $in
+
+rule link
+  command = $cc $ldflags $in -o $out
+  description = Linking $out
+
+build src/main.o: compile src/main.c
+build gsmanufacturing: link src/main.o
+
+default gsmanufacturing
