@@ -1,8 +1,23 @@
-BasedOnStyle: LLVM
+BasedOnStyle: WebKit
 IndentWidth: 8
 UseTab: Always
-BreakBeforeBraces: Linux
-AllowShortIfStatementsOnASingleLine: false
 IndentCaseLabels: false
 ColumnLimit: 100
 PointerAlignment: Left
+SortIncludes: true
+
+# slightly different K&R
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterStruct: false
+  AfterEnum: false
+  AfterFunction: true
+  BeforeElse: true
+  AfterControlStatement: false
+  IndentBraces: false
+
+# bullshit
+SpaceInEmptyBlock: false
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
