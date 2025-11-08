@@ -27,6 +27,11 @@ typedef union vec4_t {
 	};
 } vec4_t;
 
+// curves everyone uses
+typedef vec2_t cubic_bezier_t[4];
+// curves granny smith uses for whatever reason
+typedef vec2_t quadratic_bezier_t[3];
+
 #define streql(a, b) (strcmp(a, b) == 0)
 // i'm not gonna use heap memory for random optional fields
 #define OPTIONAL(type)                      \

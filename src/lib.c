@@ -33,8 +33,7 @@ void arena_free(arena_t* arena)
 
 void* arena_alloc(arena_t* arena, size_t size)
 {
-	// it's gonna segfault anyway
-	// might as well complain instead of mysteriously dying
+	// TODO alignment exists
 	size_t end = (size_t)arena->alloc_pos + size;
 	if (end > arena->size) {
 		panic("arena allocation out of bounds");

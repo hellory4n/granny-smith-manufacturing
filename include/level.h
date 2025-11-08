@@ -5,6 +5,7 @@
 // @noidea = fields where i have no no idea
 // @unused = fields that are in the xml but we don't use (most likely used in mediocre's own editor)
 
+#include "ctx.h"
 #include "lib.h"
 
 // this is horrible alignment but i don't care
@@ -30,12 +31,6 @@ typedef struct dude_entity_t {
 	// most likely in radians
 	float rotation;
 } dude_entity_t;
-
-// @unsure most curves in vector programs have 4 points, but the xml has 6, which is still a valid
-// bezier curve (probably). will it accept 4 points or do i have to do some conversion faffery?
-typedef struct curve_point_t {
-	float p[6];
-} curve_point_t;
 
 // land.
 typedef struct body_entity_t {
@@ -78,7 +73,7 @@ typedef struct body_entity_t {
 	// an engine limitation or just the way that mediocre's editor was used?
 	vec2_t* line_points;
 	size_t line_point_len;
-	curve_point_t curve_points;
+	quadratic_bezier_t* curve_points;
 	size_t curve_point_len;
 } body_entity_t;
 
@@ -201,4 +196,7 @@ typedef struct level_file_t {
 bool save_decal_file(const char* path, const decal_file_t* decal);
 
 // returns true on success, false on failure
-bool save_level_file(const char* path, const level_file_t* decal);
+bool save_level_file(const char* path, const level_file_t* level);
+
+// parses an svg file and makes a level struct from that. returns null on failure
+level_file_t* level_from_svg(ctx_t ctx, arena_t* arena, const char* svg_path);
