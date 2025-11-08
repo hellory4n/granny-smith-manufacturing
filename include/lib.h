@@ -29,11 +29,31 @@ typedef union vec4_t {
 
 #define streql(a, b) (strcmp(a, b) == 0)
 // i'm not gonna use heap memory for random optional fields
-#define OPTIONAL(type)                                                                             \
-	struct {                                                                                   \
-		bool valid;                                                                        \
-		union {                                                                            \
-			type some;                                                                 \
-			unsigned char none;                                                        \
-		};                                                                                 \
+#define OPTIONAL(type)                      \
+	struct {                            \
+		bool valid;                 \
+		union {                     \
+			type some;          \
+			unsigned char none; \
+		};                          \
 	}
+
+// Oh god oh fuck.
+void panic(const char* fmt, ...);
+
+// arena stolen from very early libtrippin
+// since that's easier than porting C++ code
+typedef struct {
+	size_t size;
+	size_t alloc_pos;
+	void* buffer;
+} arena_t;
+
+// Makes a new arena :)
+arena_t arena_new(size_t size);
+
+// Frees the arena and everything inside it.
+void arena_free(arena_t* arena);
+
+// Allocates space in the arena.
+void* arena_alloc(arena_t* arena, size_t size);

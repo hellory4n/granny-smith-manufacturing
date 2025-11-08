@@ -11,6 +11,8 @@ rule link
 
 build src/main.o: compile src/main.c
 build src/cmd.o: compile src/cmd.c
-build gsmanufacturing: link src/main.o src/cmd.o
+build src/level.o: compile src/level.c
+build src/lib.o: compile src/lib.c
+build gsmanufacturing: link src/main.o src/cmd.o src/level.o src/lib.o
 
 default gsmanufacturing

@@ -1,11 +1,34 @@
-#include "ctx.h"
-#include "gsmanufacturing.h"
-#include "lib.h"
 #include <assert.h>
 #include <stdio.h>
 
+#include "ctx.h"
+#include "gsmanufacturing.h"
+#include "level.h"
+#include "lib.h"
+
 int main(int argc, char* argv[])
 {
+	arena_t arena = arena_new(1024 * 32);
+	decal_file_t decalma = {
+		.texture = "balls.png",
+	};
+	decalma.decals = arena_alloc(&arena, sizeof(decal_t) * 3);
+	decalma.decals[0] = (decal_t) {
+		.name = "decalma",
+		.coords = { { 1, 2, 3, 4 } },
+	};
+	decalma.decals[1] = (decal_t) {
+		.name = "it was the night we had to fart",
+		.coords = { { 4, 3, 2, 1 } },
+	};
+	decalma.decals[2] = (decal_t) {
+		.name = "the the uhh um",
+		.coords = { { 32175472, 3, 0, 1 } },
+	};
+	decalma.decal_len = 3;
+	save_decal_file("man.xml", &decalma);
+	arena_free(&arena);
+
 	assert(argc > 0); // first arg must be the exe name
 	ctx_t ctx = {
 		.cmd_name = argv[0],
