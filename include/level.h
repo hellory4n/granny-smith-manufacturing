@@ -9,6 +9,8 @@
 #include "lib.h"
 
 // this is horrible alignment but i don't care
+// all rotations are in radians
+// positions use opengl-style coordinates
 
 // decalma
 typedef struct decal_t {
@@ -28,8 +30,7 @@ typedef struct dude_entity_t {
 	// dude... dude... dude... what? GOOD NEWS GOOD NEWS GOOD NEWS
 	const char* name;
 	vec2_t position;
-	// most likely in radians
-	float rotation;
+	double rotation;
 } dude_entity_t;
 
 // land.
@@ -38,14 +39,14 @@ typedef struct body_entity_t {
 	OPTIONAL(const char*) template;
 	vec2_t position;
 	// most likely in radians
-	float rotation;
+	double rotation;
 	// @guess organization thing used by mediocre's editor?
 	int category;
 	vec4_t color;
 	// the position's Z axis, which is a different attribute in the xml for some reason
-	float z;
+	double z;
 	// individual points don't get to be vec3s, there is only one depth param
-	float depth;
+	double depth;
 	// probably bevels
 	OPTIONAL(vec2_t) edge;
 	// @unused probably
@@ -69,8 +70,6 @@ typedef struct body_entity_t {
 	// some attributes might be missing since there's a lot of optional fields
 	// @noidea textures were too weird to include here just yet
 
-	// @unsure body entities seem to always either have lines or curves but never both, is that
-	// an engine limitation or just the way that mediocre's editor was used?
 	vec2_t* line_points;
 	size_t line_point_len;
 	quadratic_bezier_t* curve_points;
@@ -80,7 +79,7 @@ typedef struct body_entity_t {
 // powerupma
 typedef struct powerup_entity_t {
 	vec2_t position;
-	float rotation;
+	double rotation;
 	// @unsure what are the other types? the ones i know:
 	// - 'apple'
 	const char* type;
@@ -89,7 +88,7 @@ typedef struct powerup_entity_t {
 // granny falls into glass and dies
 typedef struct breakable_entity_t {
 	vec2_t position;
-	float rotation;
+	double rotation;
 	// @unsure what are the other types? the ones i know:
 	// - 'metal'
 	OPTIONAL(const char*) type;
@@ -100,10 +99,10 @@ typedef struct breakable_entity_t {
 	// @noidea
 	vec2_t tex_offset;
 	vec4_t color;
-	float width;
-	float height;
+	double width;
+	double height;
 	// @guess maybe you lose health if you break it or some shit
-	OPTIONAL(float) penalty;
+	OPTIONAL(double) penalty;
 	// @unused probably
 	OPTIONAL(int) group;
 } breakable_entity_t;
@@ -111,7 +110,7 @@ typedef struct breakable_entity_t {
 typedef struct sensor_entity_t {
 	OPTIONAL(const char*) name;
 	vec2_t position;
-	float rotation;
+	double rotation;
 	// @unsure what are the other types? the ones i know:
 	// - 'box'
 	OPTIONAL(const char*) type;
@@ -128,13 +127,13 @@ typedef struct joint_entity_t {
 	// @guess prefab thing?
 	OPTIONAL(const char*) template;
 	vec2_t position;
-	float rotation;
+	double rotation;
 	// @unused probably
 	OPTIONAL(int) group;
 	// @noidea might be a bool
 	int fixed;
 	// position's Z axis
-	OPTIONAL(float) z;
+	OPTIONAL(double) z;
 } joint_entity_t;
 
 typedef enum entity_type_t {
@@ -162,27 +161,27 @@ typedef struct level_file_t {
 	// path to the background image
 	const char* background;
 	// in seconds
-	float start_delay;
+	double start_delay;
 	// in seconds
-	float start_delay_hard;
+	double start_delay_hard;
 	// path to the ground (?) decal xml
 	const char* grass;
 	// path to a decal file with more decals
 	const char* decals;
 	// as the name implies, the speed of the bad guy aka dude aka thief. idk what the unit is
-	float bad_guy_speed;
+	double bad_guy_speed;
 	// a bit like 'bad_guy_speed', except hard.
-	float bad_guy_speed_hard;
+	double bad_guy_speed_hard;
 	// i assume this only exists for the space levels
-	float gravity;
+	double gravity;
 	// @guess parallax or some shit
-	float background_scroll_speed;
+	double background_scroll_speed;
 	// @noidea
-	float time_scale;
+	double time_scale;
 	// @noidea
 	int clearmem;
 	// @unused
-	float edit_zoom;
+	double edit_zoom;
 	// @unused
 	vec2_t edit_pan;
 	// @unused

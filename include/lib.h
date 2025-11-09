@@ -5,25 +5,25 @@
 #include <string.h> // IWYU pragma: export
 
 typedef struct vec2_t {
-	float x;
-	float y;
+	double x;
+	double y;
 } vec2_t;
 
 typedef union vec3_t {
 	struct {
-		float x, y, z;
+		double x, y, z;
 	};
 	struct {
-		float r, g, b;
+		double r, g, b;
 	};
 } vec3_t;
 
 typedef union vec4_t {
 	struct {
-		float x, y, z, w;
+		double x, y, z, w;
 	};
 	struct {
-		float r, g, b, a;
+		double r, g, b, a;
 	};
 } vec4_t;
 

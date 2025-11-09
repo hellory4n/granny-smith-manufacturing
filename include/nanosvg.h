@@ -1,3 +1,4 @@
+/* clang-format off */ // ADDED BY ME (yours truly)
 /*
  * Copyright (c) 2013-14 Mikko Mononen memon@inside.org
  *
@@ -194,10 +195,10 @@ void nsvgDelete(NSVGimage* image);
 
 #ifdef NANOSVG_IMPLEMENTATION
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define NSVG_PI (3.14159265358979323846264338327f)
 #define NSVG_KAPPA90 (0.5522847493f)	// Length proportional to radius of a cubic bezier handle for 90deg arcs.
@@ -3130,3 +3131,4 @@ void nsvgDelete(NSVGimage* image)
 #endif // NANOSVG_IMPLEMENTATION
 
 #endif // NANOSVG_H
+/* clang-format on */ // ADDED BY ME (yours truly)

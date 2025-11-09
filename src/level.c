@@ -10,6 +10,8 @@
 #define NANOSVG_IMPLEMENTATION
 #define NANOSVG_ALL_COLOR_KEYWORDS
 #include "nanosvg.h"
+#define CUBIC2QUAD_IMPLEMENTATION
+#include "cubic2quad.h"
 
 bool save_decal_file(const char* path, const decal_file_t* decal)
 {
@@ -186,5 +188,8 @@ level_file_t* level_from_svg(ctx_t ctx, arena_t* arena, const char* svg_path)
 
 	level_file_t* level = arena_alloc(arena, sizeof(level_file_t));
 
+	// get amount of shapes
+
+	nsvgDelete(svg);
 	return level;
 }
