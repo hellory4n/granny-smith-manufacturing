@@ -7,13 +7,14 @@
 # rotations are in radians
 
 from dataclasses import dataclass
-from .lib import QuadraticBezier, Vec2f, Vec3f, Vec4f
+from typing import cast
+from .lib import QuadraticBezier, Vec2f, Vec3f, Vec4i, Vec4f
 
 @dataclass
 class Decal:
 	"""Not to be confused with DecalEntity, this one just specifies coords on a texture"""
 	name: str
-	coords: Vec4f
+	coords: Vec4i
 
 @dataclass
 class DecalFile:
@@ -220,3 +221,98 @@ class LevelFile:
 	"@unused"
 
 	entities: list[Entity]
+
+def save_decal_file(path: str, decal: DecalFile) -> None:
+	with open(path, "w") as f:
+		f.write(f'<decals texture="{decal.texture}">')
+
+		for decalm in decal.decals:
+			f.write(f'<decal name="{decalm.name}" coords="{decalm.coords.x} {decalm.coords.y} {decalm.coords.z} {decalm.coords.w}">')
+
+		f.write("</decals>")
+		f.write("\n")
+
+def save_level_file(path: str, level: LevelFile) -> None:
+	with open(path, "w") as f:
+		f.write("<level")
+		# attributes
+		f.write(f' background="{level.background}"')
+		f.write(f' startDelay="{level.start_delay}"')
+		f.write(f' startDelayHard="{level.start_delay_hard}"')
+		f.write(f' grass="{level.grass}"')
+		f.write(f' decals="{level.decals}"')
+		f.write(f' badguyspeed="{level.bad_guy_speed}"')
+		f.write(f' badguyspeedhard="{level.bad_guy_speed_hard}"')
+		f.write(f' gravity="{level.gravity}"')
+		f.write(f' bgscrollspeed="{level.background_scroll_speed}"')
+		f.write(f' timescale="{level.time_scale}"')
+		f.write(f' clearmem="{level.clearmem}"')
+		f.write(f' editZoom="{level.edit_zoom}"')
+		f.write(f' editPan="{level.edit_pan}"')
+		f.write(f' editWorkMode="{level.edit_work_mode}"')
+		f.write(">")
+
+		# entitny
+		f.write("<entities>")
+		for entity in level.entities:
+			if entity is DudeEntity:
+				dude = cast(DudeEntity, entity)
+				f.write('<dude')
+				f.write(f' name="{dude.name}')
+				f.write(f' pos="{dude.position.x} {dude.position.y}"')
+				f.write(f' rot="{dude.rotation}"')
+				f.write('/>')
+
+			if entity is BodyEntity:
+				# body entities are fun since there's a billion optional attributes
+				body = cast(BodyEntity, entity)
+				f.write('<body')
+				if body.template is not None:
+					f.write(f' template="{body.template}"')
+				f.write(f' pos="{body.position.x} {body.position.y}"')
+				f.write(f' rot="{body.rotation}"')
+				f.write(f' category="{body.category}"')
+				f.write(f' color="{body.color.x} {body.color.y} {body.color.z} {body.color.w}"')
+				f.write(f' z="{body.z}"')
+				f.write(f' depth="{body.depth}"')
+				if body.edge is not None:
+					f.write(f' edge="{body.edge.x} {body.edge.y}"')
+				if body.group is not None:
+					f.write(f' __group="{body.group}"')
+				if body.mapping is not None:
+					f.write(f' mapping="{body.mapping}"')
+				if body.curve is not None:
+					f.write(f' curve="{body.curve}"')
+				if body.extra_rotation is not None:
+					f.write(f' extrarot="{body.extra_rotation.x} {body.extra_rotation.y} {body.extra_rotation.z}"')
+				if body.mask is not None:
+					f.write(f' mask="{body.mask}"')
+				if body.hidden is not None:
+					f.write(f' hidden="{int(body.hidden)}"')
+				if body.surface is not None:
+					f.write(f' surface="{body.surface}"')
+				f.write("/>")
+
+				# the actualfuckng
+				f.write('<curve>')
+				for curve in body.points:
+					# FIXME is this even the right order
+					f.write(f'<v>{curve.x1} {curve.y1} {curve.c1} {curve.x2} {curve.y2} {curve.c2}</v>')
+				f.write('</curve>')
+				f.write('</body>')
+
+			if entity is PowerupEntity:
+				assert False, "todo"
+
+			if entity is BreakableEntity:
+				assert False, "todo"
+
+			if entity is SensorEntity:
+				assert False, "todo"
+
+			if entity is JointEntity:
+				assert False, "todo"
+
+
+		f.write("</entities>")
+		f.write('</level>\n')

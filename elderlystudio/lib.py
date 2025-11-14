@@ -38,16 +38,28 @@ class Vec4i:
 
 @dataclass
 class QuadraticBezier:
-	x: float
-	y: float
-	c: float
+	x1: float
+	y1: float
+	c1: float
+	"control point"
+
+	x2: float
+	y2: float
+	c2: float
 	"control point"
 
 @dataclass
 class CubicBezier:
-	x: float
-	y: float
+	x1: float
+	y1: float
 	c1: float
 	"first control point"
+	d1: float
+	"second control point"
+
+	x2: float
+	y2: float
 	c2: float
+	"first control point"
+	d2: float
 	"second control point"
